@@ -127,30 +127,29 @@ npm run build
 
 ### Single-project deployment on Vercel
 
-This repository now includes a root [vercel.json](D:\Production-Ready Containerized Inventory & Order Management System\vercel.json) that configures Vercel Services:
+This repository now uses the stable single-project Vercel pattern:
 
-- `frontend` mounted at `/`
-- `backend` mounted at `/api`
+- root `api/index.py` for the FastAPI backend
+- root [vercel.json](D:\Production-Ready Containerized Inventory & Order Management System\vercel.json) for the frontend build
+- Vite frontend output published from `frontend/dist`
 
-The frontend automatically defaults to `/api` when running on a non-local host, so you usually do not need to hardcode a production API URL for Vercel.
+The frontend automatically defaults to `/api` when running on a hosted environment.
 
 ### Vercel setup
 
 1. Import the repository into Vercel
-2. On the project settings page, set the project `Framework Preset` to `Services`
-3. Keep the repository root as the project root
-4. Add environment variables for the backend service:
+2. Keep the project root at `./`
+3. Set `Framework Preset` to `Other`
+4. Let [vercel.json](D:\Production-Ready Containerized Inventory & Order Management System\vercel.json) control the build
+5. Add environment variables:
 
 - `DATABASE_URL=<your hosted PostgreSQL connection string>`
 - `CORS_ORIGINS=https://your-vercel-domain.vercel.app`
-
-Optional frontend variable:
-
 - `VITE_API_BASE_URL=/api`
 
 ### Database options
 
-Vercel does not provide PostgreSQL directly in this repository setup, so use any hosted Postgres provider and paste its connection string into `DATABASE_URL`.
+Use any hosted PostgreSQL provider and paste its connection string into `DATABASE_URL`.
 
 Good options:
 

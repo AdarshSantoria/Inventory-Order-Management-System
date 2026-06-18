@@ -1,5 +1,6 @@
 import os
 from collections.abc import Generator
+from importlib import import_module
 
 import pytest
 from fastapi.testclient import TestClient
@@ -43,6 +44,12 @@ def setup_database() -> Generator[None, None, None]:
 @pytest.fixture
 def client() -> TestClient:
     return TestClient(app)
+
+
+@pytest.fixture
+def vercel_client() -> TestClient:
+    vercel_app = import_module("app.vercel").app
+    return TestClient(vercel_app)
 
 
 def test_product_crud_and_unique_sku(client: TestClient) -> None:
@@ -189,3 +196,9 @@ def test_cancelling_order_restores_inventory(client: TestClient) -> None:
 
     refreshed_product = client.get(f"/products/{product['id']}").json()
     assert refreshed_product["quantity_in_stock"] == 7
+
+
+def test_vercel_api_prefix_routes_to_fastapi(vercel_client: TestClient) -> None:
+    response = vercel_client.get("/api/customers")
+    assert response.status_code == 200
+    assert response.json() == []

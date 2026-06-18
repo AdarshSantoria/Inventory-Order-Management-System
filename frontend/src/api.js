@@ -1,5 +1,9 @@
 const runtimeBaseUrl = window.__APP_CONFIG__?.API_BASE_URL
-const defaultBaseUrl = `${window.location.protocol}//${window.location.hostname || 'localhost'}:8000`
+const isLocalHost =
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+const defaultBaseUrl = isLocalHost
+  ? `${window.location.protocol}//${window.location.hostname || 'localhost'}:8000`
+  : '/api'
 
 export const API_BASE_URL = (runtimeBaseUrl || import.meta.env.VITE_API_BASE_URL || defaultBaseUrl).replace(/\/$/, '')
 

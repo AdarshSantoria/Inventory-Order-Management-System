@@ -125,37 +125,38 @@ npm run build
 
 ## Deployment Guide
 
-### Recommended split
+### Single-project deployment on Vercel
 
-- Frontend: Vercel
-- Backend API: Render
-- Database: Render Postgres
+This repository now includes a root [vercel.json](D:\Production-Ready Containerized Inventory & Order Management System\vercel.json) that configures Vercel Services:
 
-### Frontend on Vercel
+- `frontend` mounted at `/`
+- `backend` mounted at `/api`
 
-- Import the same GitHub repository into Vercel
-- Set `Root Directory` to `frontend`
-- Framework preset: `Vite`
-- Build command: leave Vercel default or use `npm run build`
-- Output directory: leave Vercel default or use `dist`
-- Add environment variable `VITE_API_BASE_URL=https://your-render-backend.onrender.com`
+The frontend automatically defaults to `/api` when running on a non-local host, so you usually do not need to hardcode a production API URL for Vercel.
 
-### Backend on Render
+### Vercel setup
 
-- Use the root-level `render.yaml` Blueprint or create a Web Service manually
-- If creating manually:
-- Root directory: `backend`
-- Runtime: `Docker`
-- Dockerfile path: `backend/Dockerfile`
-- Health check path: `/health`
-- Set `DATABASE_URL` from your Render Postgres instance
-- Set `CORS_ORIGINS` to your deployed Vercel frontend URL, for example `https://your-project.vercel.app`
+1. Import the repository into Vercel
+2. On the project settings page, set the project `Framework Preset` to `Services`
+3. Keep the repository root as the project root
+4. Add environment variables for the backend service:
 
-### Database on Render
+- `DATABASE_URL=<your hosted PostgreSQL connection string>`
+- `CORS_ORIGINS=https://your-vercel-domain.vercel.app`
 
-- Create a free Render Postgres instance
-- Copy its internal or external connection string into `DATABASE_URL`
-- Keep the backend and database in the same region when possible
+Optional frontend variable:
+
+- `VITE_API_BASE_URL=/api`
+
+### Database options
+
+Vercel does not provide PostgreSQL directly in this repository setup, so use any hosted Postgres provider and paste its connection string into `DATABASE_URL`.
+
+Good options:
+
+- Neon Postgres
+- Vercel Marketplace Postgres providers
+- Any external PostgreSQL URL supported by SQLAlchemy
 
 ## Deliverables Status
 

@@ -125,18 +125,37 @@ npm run build
 
 ## Deployment Guide
 
-### Backend on Render / Railway / Fly.io
+### Recommended split
 
-- Build from the `backend` directory
+- Frontend: Vercel
+- Backend API: Render
+- Database: Render Postgres
+
+### Frontend on Vercel
+
+- Import the same GitHub repository into Vercel
+- Set `Root Directory` to `frontend`
+- Framework preset: `Vite`
+- Build command: leave Vercel default or use `npm run build`
+- Output directory: leave Vercel default or use `dist`
+- Add environment variable `VITE_API_BASE_URL=https://your-render-backend.onrender.com`
+
+### Backend on Render
+
+- Use the root-level `render.yaml` Blueprint or create a Web Service manually
+- If creating manually:
+- Root directory: `backend`
+- Runtime: `Docker`
 - Dockerfile path: `backend/Dockerfile`
-- Set `DATABASE_URL` to your managed PostgreSQL connection string
-- Set `CORS_ORIGINS` to your deployed frontend URL
+- Health check path: `/health`
+- Set `DATABASE_URL` from your Render Postgres instance
+- Set `CORS_ORIGINS` to your deployed Vercel frontend URL, for example `https://your-project.vercel.app`
 
-### Frontend on Vercel / Netlify
+### Database on Render
 
-- Build command: `npm run build`
-- Publish directory: `dist`
-- Set `VITE_API_BASE_URL` or runtime `API_BASE_URL` to the deployed backend URL
+- Create a free Render Postgres instance
+- Copy its internal or external connection string into `DATABASE_URL`
+- Keep the backend and database in the same region when possible
 
 ## Deliverables Status
 
